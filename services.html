@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Services</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body id="main">
+
+  <video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+    <source src="./video.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <div id="overlay"></div>
+
+  <div class="hamburger" id="hamburger" aria-label="Toggle menu" role="button" tabindex="0" aria-expanded="false" aria-controls="menu">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <nav class="menu" id="menu" aria-label="Primary navigation" hidden>
+    <a href="index.html" tabindex="-1">Home</a>
+    <a href="about.html" tabindex="-1">About</a>
+    <a href="services.html" class="active" tabindex="-1">Services</a>
+    <a href="portfolio.html" tabindex="-1">Portfolio</a>
+    <a href="contact.html" tabindex="-1">Contact</a>
+  </nav>
+
+  <section class="main-heading" role="main" tabindex="0">
+    <h1>Services</h1>
+    <p style="color: var(--color-text-light); max-width: 600px; margin: 20px auto; font-size: 1.2rem;">
+      We offer AI consulting, software development, and automation services tailored to your needs.
+    </p>
+  </section>
+  
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const menu = document.getElementById('menu');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Toggle menu open/close with accessibility
+    function toggleMenu() {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        hamburger.setAttribute('aria-expanded', 'false');
+        menu.hidden = true;
+        hamburger.classList.remove('active');
+        menu.classList.remove('active');
+        setMenuTabIndex(-1);
+      } else {
+        hamburger.setAttribute('aria-expanded', 'true');
+        menu.hidden = false;
+        hamburger.classList.add('active');
+        menu.classList.add('active');
+        setMenuTabIndex(0);
+      }
+    }
+
+    function setMenuTabIndex(value) {
+      menu.querySelectorAll('a').forEach(a => a.tabIndex = value);
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+
+    hamburger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleMenu();
+      }
+    });
+
+    // Load theme from localStorage or system preference
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        if (savedTheme === 'dark') {
+          body.classList.add('dark');
+          themeToggleBtn.textContent = '☀️';
+        } else {
+          body.classList.remove('dark');
+          themeToggleBtn.textContent = '🌙';
+        }
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          body.classList.add('dark');
+          themeToggleBtn.textContent = '☀️';
+        } else {
+          body.classList.remove('dark');
+          themeToggleBtn.textContent = '🌙';
+        }
+      }
+    }
+
+    // Toggle theme on button click
+    themeToggleBtn.addEventListener('click', () => {
+      if (body.classList.contains('dark')) {
+        body.classList.remove('dark');
+        themeToggleBtn.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        body.classList.add('dark');
+        themeToggleBtn.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Initialize on page load
+    loadTheme();
+
+    // Initially hide menu links from tab navigation
+    setMenuTabIndex(-1);
+  </script>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
